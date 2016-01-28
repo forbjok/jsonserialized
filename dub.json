@@ -1,0 +1,9 @@
+{
+  "name": "jsonserialized",
+  "description": "JSON serialization library for std_data_json. Easily serialize/deserialize structs to/from a JSONValue.",
+  "copyright": "Copyright © 2016, Kjartan F. Kvamme",
+  "authors": ["Kjartan F. Kvamme"],
+  "dependencies": {
+    "std_data_json": "~>0.17.0"
+  }
+}
