@@ -6,7 +6,7 @@ import std.traits;
 
 @safe:
 
-pure void deserializeFromJSONValue(T)(ref T array, JSONValue jsonValue) if (isArray!T) {
+pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (isArray!T) {
     // Iterate each item in the array JSONValue and add them to values, converting them to the actual type
     foreach(jvItem; jsonValue.get!(JSONValue[])) {
         static if (isSomeString!(ForeachType!T)) {
@@ -25,7 +25,7 @@ pure void deserializeFromJSONValue(T)(ref T array, JSONValue jsonValue) if (isAr
     }
 }
 
-pure void deserializeFromJSONValue(T)(ref T associativeArray, JSONValue jsonValue) if (isAssociativeArray!T) {
+pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonValue) if (isAssociativeArray!T) {
     // Iterate each item in the JSON object
     foreach(stringKey, value; jsonValue.get!(JSONValue[string])) {
         auto key = stringKey.to!(KeyType!T);
@@ -53,7 +53,7 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, JSONValue jsonValu
     }
 }
 
-pure void deserializeFromJSONValue(T)(ref T obj, JSONValue jsonValue) if (is(T == struct)) {
+pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(T == struct)) {
     foreach(memberName; __traits(allMembers, T)) {
         alias MemberType = typeof(__traits(getMember, obj, memberName));
 
