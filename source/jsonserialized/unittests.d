@@ -82,3 +82,72 @@ unittest {
     TestStruct ts4;
     ts4.deserializeFromJSONValue(`{ "nonexistentString": "Move along, nothing to see here." }`.toJSONValue());
 }
+
+unittest {
+    import jsonserialized.serialization;
+    import jsonserialized.deserialization;
+    import stdx.data.json;
+
+    class TestSubClass {
+        int anotherInt;
+    }
+
+    class TestClass {
+        int singleInt;
+        int[] intArray;
+        int[][] arrayOfIntArrays;
+        int[string] intStringAssocArray;
+        int[int] intIntAssocArray;
+        char singleChar;
+        char[] charArray;
+        string singleString;
+        string[] stringArray;
+        string[][] arrayOfStringArrays;
+        string[string] stringAssocArray;
+        string[string][string] stringAssocArrayOfAssocArrays;
+
+        auto subClass = new TestSubClass();
+    }
+
+    // Create test struct and set it up with some test values
+    auto tc = new TestClass();
+    with (tc) {
+        singleInt = 1234;
+        intArray = [1, 2, 3, 4];
+        arrayOfIntArrays = [[1, 2], [3, 4]];
+        intStringAssocArray = ["one": 1, "two": 2, "three": 3];
+        intIntAssocArray = [1: 3, 2: 1, 3: 2];
+        singleChar = 'A';
+        charArray = ['A', 'B', 'C', 'D'];
+        singleString = "just a string";
+        stringArray = ["a", "few", "strings"];
+        arrayOfStringArrays = [["a", "b"], ["c", "d"]];
+        stringAssocArray = ["a": "A", "b": "B", "c": "C"];
+        stringAssocArrayOfAssocArrays = ["a": ["a": "A", "b": "B"], "b": ["c": "C", "d": "D"]];
+        subClass.anotherInt = 42;
+    }
+
+    // Serialize the struct to JSON
+    auto jv = tc.serializeToJSONValue();
+
+    // Create a new empty struct
+    auto tc2 = new TestClass();
+
+    // Deserialize the JSONValue into it
+    tc2.deserializeFromJSONValue(jv);
+
+    // Assert that both structs are identical
+    assert(tc2.singleInt == tc.singleInt);
+    assert(tc2.intArray == tc.intArray);
+    assert(tc2.arrayOfIntArrays == tc.arrayOfIntArrays);
+    assert(tc2.intStringAssocArray == tc.intStringAssocArray);
+    assert(tc2.intIntAssocArray == tc.intIntAssocArray);
+    assert(tc2.singleChar == tc.singleChar);
+    assert(tc2.charArray == tc.charArray);
+    assert(tc2.singleString == tc.singleString);
+    assert(tc2.stringArray == tc.stringArray);
+    assert(tc2.arrayOfStringArrays == tc.arrayOfStringArrays);
+    assert(tc2.stringAssocArray == tc.stringAssocArray);
+    assert(tc2.stringAssocArrayOfAssocArrays == tc.stringAssocArrayOfAssocArrays);
+    assert(tc2.subClass.anotherInt == tc.subClass.anotherInt);
+}

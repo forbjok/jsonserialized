@@ -50,31 +50,39 @@ pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociat
     return JSONValue(items);
 }
 
-pure JSONValue serializeToJSONValue(T)(in ref T obj) if (is(T == struct)) {
+pure JSONValue serializeToJSONValue(T)(in ref T obj) if (is(T == struct) || is(T == class)) {
+    enum fieldNames = FieldNameTuple!T;
+
     JSONValue[string] jsonValues;
 
-    foreach(memberName; __traits(allMembers, T)) {
-        auto member = __traits(getMember, obj, memberName);
-        alias MemberType = typeof(member);
+    foreach(fieldName; fieldNames) {
+        auto field = __traits(getMember, obj, fieldName);
+        alias FieldType = typeof(field);
 
-        static if (is(MemberType == struct)) {
-            // This member is a struct - recurse into it
-            jsonValues[memberName] = member.serializeToJSONValue();
+        static if (is(FieldType == struct)) {
+            // This field is a struct - recurse into it
+            jsonValues[fieldName] = field.serializeToJSONValue();
         }
-        else static if (isSomeString!MemberType) {
+        else static if (is(FieldType == class)) {
+            // This field is a class - recurse into it unless it is null
+            if (field !is null) {
+                jsonValues[fieldName] = field.serializeToJSONValue();
+            }
+        }
+        else static if (isSomeString!FieldType) {
             // Because JSONValue only seems to work with string strings (and not char[], etc), convert all string types to string
-            jsonValues[memberName] = JSONValue(member.to!string);
+            jsonValues[fieldName] = JSONValue(field.to!string);
         }
-        else static if (isArray!MemberType) {
-            // Member is an array
-            jsonValues[memberName] = member.serializeToJSONValue();
+        else static if (isArray!FieldType) {
+            // Field is an array
+            jsonValues[fieldName] = field.serializeToJSONValue();
         }
-        else static if (isAssociativeArray!MemberType) {
-            // Member is an associative array
-            jsonValues[memberName] = member.serializeToJSONValue();
+        else static if (isAssociativeArray!FieldType) {
+            // Field is an associative array
+            jsonValues[fieldName] = field.serializeToJSONValue();
         }
         else {
-            jsonValues[memberName] = JSONValue(member);
+            jsonValues[fieldName] = JSONValue(field);
         }
     }
 

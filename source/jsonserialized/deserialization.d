@@ -53,32 +53,40 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
     }
 }
 
-pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(T == struct)) {
-    foreach(memberName; __traits(allMembers, T)) {
-        alias MemberType = typeof(__traits(getMember, obj, memberName));
+pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(T == struct) || is(T == class)) {
+    enum fieldNames = FieldNameTuple!T;
 
-        if (memberName !in jsonValue) {
+    foreach(fieldName; fieldNames) {
+        alias FieldType = typeof(__traits(getMember, obj, fieldName));
+
+        if (fieldName !in jsonValue) {
             continue;
         }
 
-        static if (is(MemberType == struct)) {
-            // This member is a struct - recurse into it
-            __traits(getMember, obj, memberName).deserializeFromJSONValue(jsonValue[memberName]);
+        static if (is(FieldType == struct)) {
+            // This field is a struct - recurse into it
+            __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
         }
-        else static if (isSomeString!MemberType) {
+        else static if (is(FieldType == class)) {
+            // This field is a class - recurse into it unless it is null
+            if (__traits(getMember, obj, fieldName) !is null) {
+                __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
+            }
+        }
+        else static if (isSomeString!FieldType) {
             // Because all string types are stored as string in JSONValue, get it as string and convert it to the correct string type
-            __traits(getMember, obj, memberName) = jsonValue[memberName].get!string.to!MemberType;
+            __traits(getMember, obj, fieldName) = jsonValue[fieldName].get!string.to!FieldType;
         }
-        else static if (isArray!MemberType) {
-            // Member is an array
-            __traits(getMember, obj, memberName).deserializeFromJSONValue(jsonValue[memberName]);
+        else static if (isArray!FieldType) {
+            // Field is an array
+            __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
         }
-        else static if (isAssociativeArray!MemberType) {
-            // Member is an associative array
-            __traits(getMember, obj, memberName).deserializeFromJSONValue(jsonValue[memberName]);
+        else static if (isAssociativeArray!FieldType) {
+            // Field is an associative array
+            __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
         }
         else {
-            __traits(getMember, obj, memberName) = jsonValue[memberName].to!MemberType;
+            __traits(getMember, obj, fieldName) = jsonValue[fieldName].to!FieldType;
         }
     }
 }
