@@ -54,6 +54,16 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
                 associativeArray[key] = subAssocArray;
             }
         }
+        else static if (is(ValueType!T == struct)) {
+            // The value type is a struct - instantiate it
+            ValueType!T newStruct;
+
+            // ...deserialize into the new instance
+            newStruct.deserializeFromJSONValue(value);
+
+            // ...and add it to the associative array
+            associativeArray[key] = newStruct;
+        }
         else static if (isSomeString!(ValueType!T)) {
             associativeArray[key] = value.get!string.to!(ValueType!T);
         }

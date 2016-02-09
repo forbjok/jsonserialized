@@ -36,6 +36,7 @@ unittest {
         TestSubStruct subStruct;
         NestedStruct nestedStruct;
         NestedStruct[] arrayOfNestedStructs;
+        NestedStruct[string] nestedStructAssocArray;
     }
 
     // Create test struct and set it up with some test values
@@ -58,6 +59,7 @@ unittest {
         nestedStruct.nestedInt = 53;
         nestedStruct.nestedString = "Nested string";
         arrayOfNestedStructs = [NestedStruct(1, "One"), NestedStruct(2, "Two")];
+        nestedStructAssocArray = ["one": NestedStruct(1, "One"), "two": NestedStruct(2, "Two")];
     }
 
     // Serialize the struct to JSON
@@ -93,6 +95,9 @@ unittest {
     assertEqual(ts2.arrayOfNestedStructs[0].nestedString, ts.arrayOfNestedStructs[0].nestedString);
     assertEqual(ts2.arrayOfNestedStructs[1].nestedInt, ts.arrayOfNestedStructs[1].nestedInt);
     assertEqual(ts2.arrayOfNestedStructs[1].nestedString, ts.arrayOfNestedStructs[1].nestedString);
+    assertEqual(ts2.nestedStructAssocArray, ts.nestedStructAssocArray);
+    assertEqual(ts2.nestedStructAssocArray["one"].nestedInt, ts.nestedStructAssocArray["one"].nestedInt);
+    assertEqual(ts2.nestedStructAssocArray["two"].nestedString, ts.nestedStructAssocArray["two"].nestedString);
 
     // Attempt to deserialize partial JSON
     TestStruct ts3;

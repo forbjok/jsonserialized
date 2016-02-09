@@ -38,7 +38,11 @@ pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociat
         // JSON keys have to be strings, so convert every key to a string
         auto stringKey = key.to!string;
 
-        static if (isAssociativeArray!(ValueType!T)) {
+        static if (is(ValueType!T == struct)) {
+            // The value type is struct
+            items[stringKey] = value.serializeToJSONValue();
+        }
+        else static if (isAssociativeArray!(ValueType!T)) {
             /* The associative array's value type is another associative array type.
                It's recursion time. */
             items[stringKey] = value.serializeToJSONValue();
