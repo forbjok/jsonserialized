@@ -19,6 +19,16 @@ pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (i
             // ...and add it to the array
             array ~= newStruct;
         }
+        else static if (is(ForeachType!T == class)) {
+            // The item type is class - create a new instance
+            auto newClass = new ForeachType!T();
+
+            // ...deserialize into the new instance
+            newClass.deserializeFromJSONValue(jvItem);
+
+            // ...and add it to the array
+            array ~= newClass;
+        }
         else static if (isSomeString!(ForeachType!T)) {
             array ~= jvItem.get!string.to!(ForeachType!T);
         }

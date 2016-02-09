@@ -123,6 +123,17 @@ unittest {
     }
 
     class TestClass {
+        static class NestedClass {
+            int nestedInt;
+
+            pure this() {
+            }
+
+            this(in int initInt) {
+                nestedInt = initInt;
+            }
+        }
+
         int singleInt;
         int[] intArray;
         int[][] arrayOfIntArrays;
@@ -135,8 +146,10 @@ unittest {
         string[][] arrayOfStringArrays;
         string[string] stringAssocArray;
         string[string][string] stringAssocArrayOfAssocArrays;
+        NestedClass[] arrayOfNestedClasses;
 
         auto subClass = new TestSubClass();
+        auto nestedClass = new NestedClass(53);
     }
 
     // Create test struct and set it up with some test values
@@ -154,6 +167,7 @@ unittest {
         arrayOfStringArrays = [["a", "b"], ["c", "d"]];
         stringAssocArray = ["a": "A", "b": "B", "c": "C"];
         stringAssocArrayOfAssocArrays = ["a": ["a": "A", "b": "B"], "b": ["c": "C", "d": "D"]];
+        arrayOfNestedClasses = [new NestedClass(1), new NestedClass(2)];
         subClass.anotherInt = 42;
     }
 
@@ -180,4 +194,7 @@ unittest {
     assertEqual(tc2.stringAssocArray, tc.stringAssocArray);
     assertEqual(tc2.stringAssocArrayOfAssocArrays, tc.stringAssocArrayOfAssocArrays);
     assertEqual(tc2.subClass.anotherInt, tc.subClass.anotherInt);
+    assertEqual(tc2.nestedClass.nestedInt, tc.nestedClass.nestedInt);
+    assertEqual(tc2.arrayOfNestedClasses[0].nestedInt, tc.arrayOfNestedClasses[0].nestedInt);
+    assertEqual(tc2.arrayOfNestedClasses[1].nestedInt, tc.arrayOfNestedClasses[1].nestedInt);
 }

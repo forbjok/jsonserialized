@@ -15,6 +15,12 @@ pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
             // This item is a struct
             values ~= item.serializeToJSONValue();
         }
+        else static if (is(ForeachType!T == class)) {
+            // This item is a class - serialize it unless it is null
+            if (item !is null) {
+                values ~= item.serializeToJSONValue();
+            }
+        }
         else static if (isSomeString!(ForeachType!T)) {
             values ~= JSONValue(item.to!string);
         }
