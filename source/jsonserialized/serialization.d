@@ -48,6 +48,12 @@ pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociat
             // The value type is struct
             items[stringKey] = value.serializeToJSONValue();
         }
+        else static if (is(ValueType!T == class)) {
+            // The value is a class - serialize it unless it is null
+            if (value !is null) {
+                items[stringKey] = value.serializeToJSONValue();
+            }
+        }
         else static if (isAssociativeArray!(ValueType!T)) {
             /* The associative array's value type is another associative array type.
                It's recursion time. */

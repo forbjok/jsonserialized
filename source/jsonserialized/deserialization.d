@@ -74,6 +74,16 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
             // ...and add it to the associative array
             associativeArray[key] = newStruct;
         }
+        else static if (is(ValueType!T == class)) {
+            // The value type is class - create a new instance
+            auto newClass = new ValueType!T();
+
+            // ...deserialize into the new instance
+            newClass.deserializeFromJSONValue(value);
+
+            // ...and add it to the associative array
+            associativeArray[key] = newClass;
+        }
         else static if (isSomeString!(ValueType!T)) {
             associativeArray[key] = value.get!string.to!(ValueType!T);
         }

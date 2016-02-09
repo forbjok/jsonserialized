@@ -147,6 +147,7 @@ unittest {
         string[string] stringAssocArray;
         string[string][string] stringAssocArrayOfAssocArrays;
         NestedClass[] arrayOfNestedClasses;
+        NestedClass[string] nestedClassAssocArray;
 
         auto subClass = new TestSubClass();
         auto nestedClass = new NestedClass(53);
@@ -168,6 +169,7 @@ unittest {
         stringAssocArray = ["a": "A", "b": "B", "c": "C"];
         stringAssocArrayOfAssocArrays = ["a": ["a": "A", "b": "B"], "b": ["c": "C", "d": "D"]];
         arrayOfNestedClasses = [new NestedClass(1), new NestedClass(2)];
+        nestedClassAssocArray = ["one": new NestedClass(1), "two": new NestedClass(2)];
         subClass.anotherInt = 42;
     }
 
@@ -197,4 +199,6 @@ unittest {
     assertEqual(tc2.nestedClass.nestedInt, tc.nestedClass.nestedInt);
     assertEqual(tc2.arrayOfNestedClasses[0].nestedInt, tc.arrayOfNestedClasses[0].nestedInt);
     assertEqual(tc2.arrayOfNestedClasses[1].nestedInt, tc.arrayOfNestedClasses[1].nestedInt);
+    assertEqual(tc2.nestedClassAssocArray["one"].nestedInt, tc.nestedClassAssocArray["one"].nestedInt);
+    assertEqual(tc2.nestedClassAssocArray["two"].nestedInt, tc.nestedClassAssocArray["two"].nestedInt);
 }
