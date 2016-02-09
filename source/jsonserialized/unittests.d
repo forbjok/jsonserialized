@@ -3,6 +3,8 @@ module jsonserialized.unittests;
 @safe:
 
 unittest {
+    import dunit.toolkit;
+
     import jsonserialized.serialization;
     import jsonserialized.deserialization;
     import stdx.data.json;
@@ -56,27 +58,27 @@ unittest {
     ts2.deserializeFromJSONValue(jv);
 
     // Assert that both structs are identical
-    assert(ts2.singleInt == ts.singleInt);
-    assert(ts2.intArray == ts.intArray);
-    assert(ts2.arrayOfIntArrays == ts.arrayOfIntArrays);
-    assert(ts2.intStringAssocArray == ts.intStringAssocArray);
-    assert(ts2.intIntAssocArray == ts.intIntAssocArray);
-    assert(ts2.singleChar == ts.singleChar);
-    assert(ts2.charArray == ts.charArray);
-    assert(ts2.singleString == ts.singleString);
-    assert(ts2.stringArray == ts.stringArray);
-    assert(ts2.arrayOfStringArrays == ts.arrayOfStringArrays);
-    assert(ts2.stringAssocArray == ts.stringAssocArray);
-    assert(ts2.stringAssocArrayOfAssocArrays == ts.stringAssocArrayOfAssocArrays);
-    assert(ts2.subStruct == ts.subStruct);
-    assert(ts2.subStruct.anotherInt == ts.subStruct.anotherInt);
+    assertEqual(ts2.singleInt, ts.singleInt);
+    assertEqual(ts2.intArray, ts.intArray);
+    assertEqual(ts2.arrayOfIntArrays, ts.arrayOfIntArrays);
+    assertEqual(ts2.intStringAssocArray, ts.intStringAssocArray);
+    assertEqual(ts2.intIntAssocArray, ts.intIntAssocArray);
+    assertEqual(ts2.singleChar, ts.singleChar);
+    assertEqual(ts2.charArray, ts.charArray);
+    assertEqual(ts2.singleString, ts.singleString);
+    assertEqual(ts2.stringArray, ts.stringArray);
+    assertEqual(ts2.arrayOfStringArrays, ts.arrayOfStringArrays);
+    assertEqual(ts2.stringAssocArray, ts.stringAssocArray);
+    assertEqual(ts2.stringAssocArrayOfAssocArrays, ts.stringAssocArrayOfAssocArrays);
+    assertEqual(ts2.subStruct, ts.subStruct);
+    assertEqual(ts2.subStruct.anotherInt, ts.subStruct.anotherInt);
 
     // Attempt to deserialize partial JSON
     TestStruct ts3;
     ts3.deserializeFromJSONValue(`{ "singleInt": 42, "singleString": "Don't panic." }`.toJSONValue());
 
-    assert(ts3.singleInt == 42);
-    assert(ts3.singleString == "Don't panic.");
+    ts3.singleInt.assertEqual(42);
+    ts3.singleString.assertEqual("Don't panic.");
 
     // Attempt to deserialize JSON containing a property that does not exist in the struct
     TestStruct ts4;
@@ -84,6 +86,8 @@ unittest {
 }
 
 unittest {
+    import dunit.toolkit;
+
     import jsonserialized.serialization;
     import jsonserialized.deserialization;
     import stdx.data.json;
@@ -137,17 +141,17 @@ unittest {
     tc2.deserializeFromJSONValue(jv);
 
     // Assert that both structs are identical
-    assert(tc2.singleInt == tc.singleInt);
-    assert(tc2.intArray == tc.intArray);
-    assert(tc2.arrayOfIntArrays == tc.arrayOfIntArrays);
-    assert(tc2.intStringAssocArray == tc.intStringAssocArray);
-    assert(tc2.intIntAssocArray == tc.intIntAssocArray);
-    assert(tc2.singleChar == tc.singleChar);
-    assert(tc2.charArray == tc.charArray);
-    assert(tc2.singleString == tc.singleString);
-    assert(tc2.stringArray == tc.stringArray);
-    assert(tc2.arrayOfStringArrays == tc.arrayOfStringArrays);
-    assert(tc2.stringAssocArray == tc.stringAssocArray);
-    assert(tc2.stringAssocArrayOfAssocArrays == tc.stringAssocArrayOfAssocArrays);
-    assert(tc2.subClass.anotherInt == tc.subClass.anotherInt);
+    assertEqual(tc2.singleInt, tc.singleInt);
+    assertEqual(tc2.intArray, tc.intArray);
+    assertEqual(tc2.arrayOfIntArrays, tc.arrayOfIntArrays);
+    assertEqual(tc2.intStringAssocArray, tc.intStringAssocArray);
+    assertEqual(tc2.intIntAssocArray, tc.intIntAssocArray);
+    assertEqual(tc2.singleChar, tc.singleChar);
+    assertEqual(tc2.charArray, tc.charArray);
+    assertEqual(tc2.singleString, tc.singleString);
+    assertEqual(tc2.stringArray, tc.stringArray);
+    assertEqual(tc2.arrayOfStringArrays, tc.arrayOfStringArrays);
+    assertEqual(tc2.stringAssocArray, tc.stringAssocArray);
+    assertEqual(tc2.stringAssocArrayOfAssocArrays, tc.stringAssocArrayOfAssocArrays);
+    assertEqual(tc2.subClass.anotherInt, tc.subClass.anotherInt);
 }
