@@ -11,7 +11,11 @@ pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
 
     // Iterate each item in the array and add them to the array of JSON values
     foreach(item; array) {
-        static if (isSomeString!(ForeachType!T)) {
+        static if (is(ForeachType!T == struct)) {
+            // This item is a struct
+            values ~= item.serializeToJSONValue();
+        }
+        else static if (isSomeString!(ForeachType!T)) {
             values ~= JSONValue(item.to!string);
         }
         else static if (isArray!(ForeachType!T)) {

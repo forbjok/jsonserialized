@@ -9,7 +9,17 @@ import std.traits;
 pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (isArray!T) {
     // Iterate each item in the array JSONValue and add them to values, converting them to the actual type
     foreach(jvItem; jsonValue.get!(JSONValue[])) {
-        static if (isSomeString!(ForeachType!T)) {
+        static if (is(ForeachType!T == struct)) {
+            // This item is a struct - instantiate it
+            ForeachType!T newStruct;
+
+            // ...deserialize into the new instance
+            newStruct.deserializeFromJSONValue(jvItem);
+
+            // ...and add it to the array
+            array ~= newStruct;
+        }
+        else static if (isSomeString!(ForeachType!T)) {
             array ~= jvItem.get!string.to!(ForeachType!T);
         }
         else static if (isArray!(ForeachType!T)) {

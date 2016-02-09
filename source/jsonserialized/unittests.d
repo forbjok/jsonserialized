@@ -11,9 +11,15 @@ unittest {
 
     struct TestSubStruct {
         int anotherInt;
+        string anotherString;
     }
 
     struct TestStruct {
+        struct NestedStruct {
+            int nestedInt;
+            string nestedString;
+        }
+
         int singleInt;
         int[] intArray;
         int[][] arrayOfIntArrays;
@@ -28,6 +34,8 @@ unittest {
         string[string][string] stringAssocArrayOfAssocArrays;
 
         TestSubStruct subStruct;
+        NestedStruct nestedStruct;
+        NestedStruct[] arrayOfNestedStructs;
     }
 
     // Create test struct and set it up with some test values
@@ -46,6 +54,10 @@ unittest {
         stringAssocArray = ["a": "A", "b": "B", "c": "C"];
         stringAssocArrayOfAssocArrays = ["a": ["a": "A", "b": "B"], "b": ["c": "C", "d": "D"]];
         subStruct.anotherInt = 42;
+        subStruct.anotherString = "Another string";
+        nestedStruct.nestedInt = 53;
+        nestedStruct.nestedString = "Nested string";
+        arrayOfNestedStructs = [NestedStruct(1, "One"), NestedStruct(2, "Two")];
     }
 
     // Serialize the struct to JSON
@@ -72,6 +84,15 @@ unittest {
     assertEqual(ts2.stringAssocArrayOfAssocArrays, ts.stringAssocArrayOfAssocArrays);
     assertEqual(ts2.subStruct, ts.subStruct);
     assertEqual(ts2.subStruct.anotherInt, ts.subStruct.anotherInt);
+    assertEqual(ts2.subStruct.anotherString, ts.subStruct.anotherString);
+    assertEqual(ts2.nestedStruct, ts.nestedStruct);
+    assertEqual(ts2.nestedStruct.nestedInt, ts.nestedStruct.nestedInt);
+    assertEqual(ts2.nestedStruct.nestedString, ts.nestedStruct.nestedString);
+    assertEqual(ts2.arrayOfNestedStructs, ts.arrayOfNestedStructs);
+    assertEqual(ts2.arrayOfNestedStructs[0].nestedInt, ts.arrayOfNestedStructs[0].nestedInt);
+    assertEqual(ts2.arrayOfNestedStructs[0].nestedString, ts.arrayOfNestedStructs[0].nestedString);
+    assertEqual(ts2.arrayOfNestedStructs[1].nestedInt, ts.arrayOfNestedStructs[1].nestedInt);
+    assertEqual(ts2.arrayOfNestedStructs[1].nestedString, ts.arrayOfNestedStructs[1].nestedString);
 
     // Attempt to deserialize partial JSON
     TestStruct ts3;
