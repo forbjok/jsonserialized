@@ -7,11 +7,13 @@ import std.traits;
 @safe:
 
 pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (isArray!T) {
+    alias ElementType = ForeachType!T;
+
     // Iterate each item in the array JSONValue and add them to values, converting them to the actual type
     foreach(jvItem; jsonValue.get!(JSONValue[])) {
-        static if (is(ForeachType!T == struct)) {
+        static if (is(ElementType == struct)) {
             // This item is a struct - instantiate it
-            ForeachType!T newStruct;
+            ElementType newStruct;
 
             // ...deserialize into the new instance
             newStruct.deserializeFromJSONValue(jvItem);
@@ -19,9 +21,9 @@ pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (i
             // ...and add it to the array
             array ~= newStruct;
         }
-        else static if (is(ForeachType!T == class)) {
+        else static if (is(ElementType == class)) {
             // The item type is class - create a new instance
-            auto newClass = new ForeachType!T();
+            auto newClass = new ElementType();
 
             // ...deserialize into the new instance
             newClass.deserializeFromJSONValue(jvItem);
@@ -29,28 +31,30 @@ pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (i
             // ...and add it to the array
             array ~= newClass;
         }
-        else static if (isSomeString!(ForeachType!T)) {
-            array ~= jvItem.get!string.to!(ForeachType!T);
+        else static if (isSomeString!ElementType) {
+            array ~= jvItem.get!string.to!ElementType;
         }
-        else static if (isArray!(ForeachType!T)) {
+        else static if (isArray!ElementType) {
             // An array of arrays. Recursion time!
-            ForeachType!T subArray;
+            ElementType subArray;
 
             subArray.deserializeFromJSONValue(jvItem);
             array ~= subArray;
         }
         else {
-            array ~= jvItem.to!(ForeachType!T);
+            array ~= jvItem.to!ElementType;
         }
     }
 }
 
 pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonValue) if (isAssociativeArray!T) {
+    alias VType = ValueType!T;
+
     // Iterate each item in the JSON object
     foreach(stringKey, value; jsonValue.get!(JSONValue[string])) {
         auto key = stringKey.to!(KeyType!T);
 
-        static if (isAssociativeArray!(ValueType!T)) {
+        static if (isAssociativeArray!VType) {
             /* The associative array's value type is another associative array type.
                It's recursion time. */
 
@@ -58,15 +62,15 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
                 associativeArray[key].deserializeFromJSONValue(value);
             }
             else {
-                ValueType!T subAssocArray;
+                VType subAssocArray;
 
                 subAssocArray.deserializeFromJSONValue(value);
                 associativeArray[key] = subAssocArray;
             }
         }
-        else static if (is(ValueType!T == struct)) {
+        else static if (is(VType == struct)) {
             // The value type is a struct - instantiate it
-            ValueType!T newStruct;
+            VType newStruct;
 
             // ...deserialize into the new instance
             newStruct.deserializeFromJSONValue(value);
@@ -74,9 +78,9 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
             // ...and add it to the associative array
             associativeArray[key] = newStruct;
         }
-        else static if (is(ValueType!T == class)) {
+        else static if (is(VType == class)) {
             // The value type is class - create a new instance
-            auto newClass = new ValueType!T();
+            auto newClass = new VType();
 
             // ...deserialize into the new instance
             newClass.deserializeFromJSONValue(value);
@@ -84,11 +88,11 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
             // ...and add it to the associative array
             associativeArray[key] = newClass;
         }
-        else static if (isSomeString!(ValueType!T)) {
-            associativeArray[key] = value.get!string.to!(ValueType!T);
+        else static if (isSomeString!VType) {
+            associativeArray[key] = value.get!string.to!VType;
         }
         else {
-            associativeArray[key] = value.to!(ValueType!T);
+            associativeArray[key] = value.to!VType;
         }
     }
 }

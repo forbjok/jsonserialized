@@ -7,24 +7,26 @@ import std.traits;
 @safe:
 
 pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
+    alias ElementType = ForeachType!T;
+
     JSONValue[] values;
 
     // Iterate each item in the array and add them to the array of JSON values
     foreach(item; array) {
-        static if (is(ForeachType!T == struct)) {
+        static if (is(ElementType == struct)) {
             // This item is a struct
             values ~= item.serializeToJSONValue();
         }
-        else static if (is(ForeachType!T == class)) {
+        else static if (is(ElementType == class)) {
             // This item is a class - serialize it unless it is null
             if (item !is null) {
                 values ~= item.serializeToJSONValue();
             }
         }
-        else static if (isSomeString!(ForeachType!T)) {
+        else static if (isSomeString!ElementType) {
             values ~= JSONValue(item.to!string);
         }
-        else static if (isArray!(ForeachType!T)) {
+        else static if (isArray!ElementType) {
             // An array of arrays. Recursion time!
             values ~= item.serializeToJSONValue();
         }
@@ -37,6 +39,8 @@ pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
 }
 
 pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociativeArray!T) {
+    alias VType = ValueType!T;
+
     JSONValue[string] items;
 
     // Iterate each item in the associative array
@@ -44,22 +48,22 @@ pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociat
         // JSON keys have to be strings, so convert every key to a string
         auto stringKey = key.to!string;
 
-        static if (is(ValueType!T == struct)) {
+        static if (is(VType == struct)) {
             // The value type is struct
             items[stringKey] = value.serializeToJSONValue();
         }
-        else static if (is(ValueType!T == class)) {
+        else static if (is(VType == class)) {
             // The value is a class - serialize it unless it is null
             if (value !is null) {
                 items[stringKey] = value.serializeToJSONValue();
             }
         }
-        else static if (isAssociativeArray!(ValueType!T)) {
+        else static if (isAssociativeArray!VType) {
             /* The associative array's value type is another associative array type.
                It's recursion time. */
             items[stringKey] = value.serializeToJSONValue();
         }
-        else static if (isSomeString!(ValueType!T)) {
+        else static if (isSomeString!VType) {
             items[stringKey] = JSONValue(value.to!string);
         }
         else {
