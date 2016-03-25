@@ -134,3 +134,10 @@ pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(
         }
     }
 }
+
+pure T deserializeFromJSONValue(T)(in JSONValue jsonValue) if (is(T == struct)) {
+    T obj;
+
+    obj.deserializeFromJSONValue(jsonValue);
+    return obj;
+}

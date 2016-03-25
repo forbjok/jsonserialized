@@ -109,6 +109,10 @@ unittest {
     // Attempt to deserialize JSON containing a property that does not exist in the struct
     TestStruct ts4;
     ts4.deserializeFromJSONValue(`{ "nonexistentString": "Move along, nothing to see here." }`.toJSONValue());
+
+    auto ts5 = deserializeFromJSONValue!TestStruct(`{ "singleInt": 42, "singleString": "Don't panic." }`.toJSONValue());
+    ts5.singleInt.assertEqual(42);
+    ts5.singleString.assertEqual("Don't panic.");
 }
 
 unittest {
