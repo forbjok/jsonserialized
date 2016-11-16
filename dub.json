@@ -6,6 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "dunit": "~>1.0.12",
-    "std_data_json": "~>0.17.0"
+    "std_data_json": "~>0.18.0"
   }
 }
