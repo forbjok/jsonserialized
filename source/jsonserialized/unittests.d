@@ -204,3 +204,18 @@ unittest {
     assertEqual(tc2.nestedClassAssocArray["one"].nestedInt, tc.nestedClassAssocArray["one"].nestedInt);
     assertEqual(tc2.nestedClassAssocArray["two"].nestedInt, tc.nestedClassAssocArray["two"].nestedInt);
 }
+
+unittest {
+    import dunit.toolkit;
+
+    import jsonserialized.deserialization : deserializeFromJSONValue;
+    import stdx.data.json : toJSONValue;
+
+    string[string] aa;
+    auto jsonValue = `{ "aString": "theString", "anInt": 42 }`.toJSONValue();
+
+    aa.deserializeFromJSONValue(jsonValue);
+
+    assertEqual(aa["aString"], "theString");
+    assertEqual(aa["anInt"], "42");
+}

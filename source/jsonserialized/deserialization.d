@@ -87,7 +87,14 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
             associativeArray[key] = newClass;
         }
         else static if (isSomeString!VType) {
-            associativeArray[key] = value.get!string.to!VType;
+            string v;
+
+            if (value.hasType!string)
+                v = value.get!string;
+            else if (value.hasType!long)
+                v = value.get!long.to!string;
+
+            associativeArray[key] = v.to!VType;
         }
         else {
             associativeArray[key] = value.to!VType;
