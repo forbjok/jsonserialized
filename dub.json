@@ -5,7 +5,7 @@
   "authors": ["Kjartan F. Kvamme"],
   "license": "MIT",
   "dependencies": {
-    "dunit": "~>1.0.12",
+    "dunit": "~>1.0.14",
     "std_data_json": "~>0.18.2"
   }
 }
