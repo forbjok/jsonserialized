@@ -1,7 +1,5 @@
 module jsonserialized.unittests;
 
-@safe:
-
 unittest {
     import dunit.toolkit;
 
