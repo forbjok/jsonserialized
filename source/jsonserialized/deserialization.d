@@ -4,8 +4,6 @@ import std.conv;
 import stdx.data.json;
 import std.traits;
 
-@safe:
-
 pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (isArray!T) {
     alias ElementType = ForeachType!T;
 
