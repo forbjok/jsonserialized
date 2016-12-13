@@ -127,6 +127,10 @@ pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(
             __traits(getMember, obj, fieldName) = jsonValue[fieldName].get!string.to!FieldType;
         }
         else static if (isArray!FieldType) {
+            // If the JSONValue does not contain an array, don't try to deserialize
+            if (!jsonValue[fieldName].hasType!(JSONValue[]))
+                continue;
+
             // Field is an array
             __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
         }
