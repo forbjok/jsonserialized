@@ -142,6 +142,13 @@ pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(
             // Field is an associative array
             __traits(getMember, obj, fieldName).deserializeFromJSONValue(jsonValue[fieldName]);
         }
+        else static if (isIntegral!FieldType) {
+            // If the JSONValue type does not contain a long, don't try to deserialize
+            if (!jsonValue[fieldName].hasType!long)
+                continue;
+
+            __traits(getMember, obj, fieldName) = jsonValue[fieldName].to!FieldType;
+        }
         else {
             __traits(getMember, obj, fieldName) = jsonValue[fieldName].to!FieldType;
         }
