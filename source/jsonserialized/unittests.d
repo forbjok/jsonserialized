@@ -225,3 +225,32 @@ unittest {
     assertEqual(aa["aString"], "theString");
     assertEqual(aa["anInt"], "42");
 }
+
+unittest {
+    /* Unit tests for attempting to deserialize mismatching types */
+    import dunit.toolkit;
+
+    import jsonserialized.deserialization : deserializeFromJSONValue;
+    import stdx.data.json : toJSONValue;
+
+    struct TestStruct {
+        int intValue;
+        string stringValue;
+        int notArray;
+        string alsoNotArray;
+        int notAA;
+        string alsoNotAA;
+    }
+
+    auto jsonValue = `{ "intValue": "aString", "stringValue": 42, "notArray": [], "alsoNotArray": [], "notAA": {}, "alsoNotAA": {} }`.toJSONValue();
+
+    TestStruct ts;
+    ts.deserializeFromJSONValue(jsonValue);
+
+    assertEqual(ts.intValue, 0);
+    assertEqual(ts.stringValue, "");
+    assertEqual(ts.notArray, 0);
+    assertEqual(ts.alsoNotArray, "");
+    assertEqual(ts.notAA, 0);
+    assertEqual(ts.alsoNotAA, "");
+}
