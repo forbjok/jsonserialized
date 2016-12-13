@@ -123,6 +123,10 @@ pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(
             }
         }
         else static if (isSomeString!FieldType) {
+            // If the JSONValue does not contain a string, don't try to deserialize
+            if (!jsonValue[fieldName].hasType!string)
+                continue;
+
             // Because all string types are stored as string in JSONValue, get it as string and convert it to the correct string type
             __traits(getMember, obj, fieldName) = jsonValue[fieldName].get!string.to!FieldType;
         }
