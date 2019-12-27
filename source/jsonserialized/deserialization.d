@@ -4,6 +4,7 @@ import std.conv;
 import stdx.data.json;
 import std.traits;
 
+/// Deserialize the contents of a JSONValue into the specified array.
 pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (isArray!T) {
     alias ElementType = ForeachType!T;
 
@@ -45,6 +46,7 @@ pure void deserializeFromJSONValue(T)(ref T array, in JSONValue jsonValue) if (i
     }
 }
 
+/// Deserialize the contents of a JSONValue into the specified associative array.
 pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonValue) if (isAssociativeArray!T) {
     alias VType = ValueType!T;
 
@@ -102,6 +104,7 @@ pure void deserializeFromJSONValue(T)(ref T associativeArray, in JSONValue jsonV
     }
 }
 
+/// Deserialize the contents of a JSONValue into the specified struct or class.
 pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(T == struct) || is(T == class)) {
     enum fieldNames = FieldNameTuple!T;
 
@@ -155,6 +158,7 @@ pure void deserializeFromJSONValue(T)(ref T obj, in JSONValue jsonValue) if (is(
     }
 }
 
+/// Deserialize the contents of a JSONValue into a struct of type T, returning the newly created struct.
 pure T deserializeFromJSONValue(T)(in JSONValue jsonValue) if (is(T == struct)) {
     T obj;
 

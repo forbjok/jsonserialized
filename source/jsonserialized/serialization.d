@@ -6,6 +6,7 @@ import std.traits;
 
 @safe:
 
+/// Convert the specified array into a JSONValue.
 pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
     alias ElementType = ForeachType!T;
 
@@ -38,6 +39,7 @@ pure JSONValue serializeToJSONValue(T)(in ref T array) if (isArray!T) {
     return JSONValue(values);
 }
 
+/// Convert the specified associative array into a JSONValue.
 pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociativeArray!T) {
     alias VType = ValueType!T;
 
@@ -74,6 +76,7 @@ pure JSONValue serializeToJSONValue(T)(in ref T associativeArray) if (isAssociat
     return JSONValue(items);
 }
 
+/// Convert the specified struct or class into a JSONValue.
 pure JSONValue serializeToJSONValue(T)(in ref T obj) if (is(T == struct) || is(T == class)) {
     enum fieldNames = FieldNameTuple!T;
 
