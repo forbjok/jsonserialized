@@ -1,11 +1,11 @@
 module jsonserialized.unittests;
 
 unittest {
-    import dunit.toolkit;
+    import dunit.toolkit : assertEqual;
 
-    import jsonserialized.serialization;
-    import jsonserialized.deserialization;
-    import stdx.data.json;
+    import jsonserialized.serialization : serializeToJSONValue;
+    import jsonserialized.deserialization : deserializeFromJSONValue;
+    import stdx.data.json : toJSONValue;
 
     struct TestSubStruct {
         int anotherInt;
@@ -120,11 +120,11 @@ unittest {
 }
 
 unittest {
-    import dunit.toolkit;
+    import dunit.toolkit : assertEqual;
 
-    import jsonserialized.serialization;
-    import jsonserialized.deserialization;
-    import stdx.data.json;
+    import jsonserialized.serialization : serializeToJSONValue;
+    import jsonserialized.deserialization : deserializeFromJSONValue;
+    import stdx.data.json : toJSONValue;
 
     class TestSubClass {
         int anotherInt;
@@ -212,7 +212,7 @@ unittest {
 }
 
 unittest {
-    import dunit.toolkit;
+    import dunit.toolkit : assertEqual;
 
     import jsonserialized.deserialization : deserializeFromJSONValue;
     import stdx.data.json : toJSONValue;
@@ -228,7 +228,7 @@ unittest {
 
 unittest {
     /* Unit tests for attempting to deserialize mismatching types */
-    import dunit.toolkit;
+    import dunit.toolkit : assertEqual;
 
     import jsonserialized.deserialization : deserializeFromJSONValue;
     import stdx.data.json : toJSONValue;
