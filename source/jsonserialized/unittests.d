@@ -19,6 +19,7 @@ unittest {
         }
 
         int singleInt;
+        float singleFloat;
         int[] intArray;
         int[][] arrayOfIntArrays;
         int[string] intStringAssocArray;
@@ -43,6 +44,7 @@ unittest {
     TestStruct ts;
     with (ts) {
         singleInt = 1234;
+        singleFloat = 1.234;
         intArray = [1, 2, 3, 4];
         arrayOfIntArrays = [[1, 2], [3, 4]];
         intStringAssocArray = ["one": 1, "two": 2, "three": 3];
@@ -75,6 +77,7 @@ unittest {
 
     // Assert that both structs are identical
     assertEqual(ts2.singleInt, ts.singleInt);
+    assertEqual(ts2.singleFloat, ts.singleFloat);
     assertEqual(ts2.intArray, ts.intArray);
     assertEqual(ts2.arrayOfIntArrays, ts.arrayOfIntArrays);
     assertEqual(ts2.intStringAssocArray, ts.intStringAssocArray);
@@ -143,6 +146,7 @@ unittest {
         }
 
         int singleInt;
+        float singleFloat;
         int[] intArray;
         int[][] arrayOfIntArrays;
         int[string] intStringAssocArray;
@@ -165,6 +169,7 @@ unittest {
     auto tc = new TestClass();
     with (tc) {
         singleInt = 1234;
+        singleFloat = 1.234;
         intArray = [1, 2, 3, 4];
         arrayOfIntArrays = [[1, 2], [3, 4]];
         intStringAssocArray = ["one": 1, "two": 2, "three": 3];
@@ -192,6 +197,7 @@ unittest {
 
     // Assert that both structs are identical
     assertEqual(tc2.singleInt, tc.singleInt);
+    assertEqual(tc2.singleFloat, tc.singleFloat);
     assertEqual(tc2.intArray, tc.intArray);
     assertEqual(tc2.arrayOfIntArrays, tc.arrayOfIntArrays);
     assertEqual(tc2.intStringAssocArray, tc.intStringAssocArray);
